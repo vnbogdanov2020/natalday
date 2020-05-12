@@ -6,11 +6,12 @@ This is a temporary script file.
 """
 
 import telebot
-from setting import bot, mlink, a_id1, a_id2
+from setting import bot, mlink#, a_id1, a_id2
 import requests
 import json
+import schedule
+import time
 
-from apscheduler.schedulers.blocking import BlockingScheduler
 
 #Подключаемся к боту       
 bot_token = bot
@@ -32,7 +33,7 @@ def send_text(message):
         
    
 '''     
- 
+
 #Функция оповещения
 def job():
     #Читаем данные с сервера
@@ -66,9 +67,10 @@ def job():
          bot.send_message(a_id2,'Проблема с доступом к сервису оповещений natalday_bot')
 
 # Подключаем планировщик повторений    
-scheduler = BlockingScheduler()
-scheduler.add_job(job, 'interval', minutes=1)
-scheduler.start()
+schedule.every().day.at("22:52").do(job)
 
+while True:
+    schedule.run_pending()
+    time.sleep(1)
 
 bot.polling()
