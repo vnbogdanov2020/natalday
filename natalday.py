@@ -5,17 +5,13 @@ import requests
 import json
 import schedule
 import time
+from multiprocessing import Process
 
 #Подключаемся к боту
 bot_token = bot
 bot = telebot.TeleBot(bot_token)
 
 # Обработка сообщений
-@bot.message_handler(content_types=['text'])
-def send_text(message):
-
-    if message.text.lower() == 'привет':
-        bot.send_message(message.chat.id, "Ваш ID: " + str(message.chat.id)+". Сообщите его администратору бота.")
 
 #Функция оповещения
 def job():
@@ -52,11 +48,38 @@ def job():
 
 
 # Подключаем планировщик повторений    
-schedule.every().day.at("05:00").do(job)
+schedule.every().day.at("20:00").do(job)
 
+@bot.message_handler(content_types=['text'])
+def send_text(message):
+
+    if message.text.lower() == 'привет':
+        bot.send_message(message.chat.id, "Ваш ID: " + str(message.chat.id)+". Сообщите его администратору бота.")
+
+# это функция отправки сообщений по таймеру
+def check_send_messages():
+    while True:
+        # ваш код проверки времени и отправки сообщений по таймеру
+        # пауза между проверками, чтобы не загружать процессор
+        schedule.run_pending()
+        time.sleep(60)
+    # а теперь запускаем проверку в отдельном потоке
+
+p1 = Process(target=check_send_messages, args=())
+p1.start()
+
+'''''
 while True:
     schedule.run_pending()
     time.sleep(1)
-
-
-bot.polling()
+'''''
+# а это включение бота на прием сообщений
+# обернуто в try, потому что если Telegram сервер станет недоступен, возможен крэш
+while True:
+    try:
+        bot.polling(none_stop=True)
+    except Exception as e:
+        print(e)
+        # повторяем через 15 секунд в случае недоступности сервера Telegram
+        time.sleep(15)
+#bot.polling()
