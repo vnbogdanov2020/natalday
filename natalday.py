@@ -19,7 +19,7 @@ def job():
     #Читаем данные с сервера
     response = requests.get(mlink, verify=False)
     todos = json.loads(response.text)
-    
+
     
     #Заголовок сообщения
     #bot.send_message('708061023', 'Доброе утро! Информация о событиях на 05.05.2020')
@@ -48,13 +48,11 @@ def job():
 
 
 # Подключаем планировщик повторений    
-schedule.every().day.at("20:00").do(job)
+schedule.every().day.at("05:00").do(job)
 
-@bot.message_handler(content_types=['text'])
+@bot.message_handler(commands=['start'])
 def send_text(message):
-
-    if message.text.lower() == 'привет':
-        bot.send_message(message.chat.id, "Ваш ID: " + str(message.chat.id)+". Сообщите его администратору бота.")
+    bot.send_message(message.chat.id, "Ваш ID: " + str(message.chat.id)+". Сообщите его администратору бота.")
 
 # это функция отправки сообщений по таймеру
 def check_send_messages():
