@@ -12,8 +12,7 @@ import json
 import schedule
 import time
 
-
-#Подключаемся к боту       
+#Подключаемся к боту
 bot_token = bot
 bot = telebot.TeleBot(bot_token)
 
