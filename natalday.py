@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
 
 import telebot
 from setting import bot, mlink#, a_id1, a_id2
@@ -16,15 +10,16 @@ import time
 bot_token = bot
 bot = telebot.TeleBot(bot_token)
 
-#Обработка сообщений
+# Обработка сообщений
 @bot.message_handler(content_types=['text'])
 def send_text(message):
 
     if message.text.lower() == 'привет':
-        bot.send_message(message.chat.id, "Ваш ID: "+message.chat.id)
+        bot.send_message(message.chat.id, "Ваш ID: " + str(message.chat.id)+". Сообщите его администратору бота.")
 
 #Функция оповещения
 def job():
+
     #Читаем данные с сервера
     response = requests.get(mlink, verify=False)
     todos = json.loads(response.text)
@@ -57,7 +52,7 @@ def job():
 
 
 # Подключаем планировщик повторений    
-schedule.every().day.at("22:52").do(job)
+schedule.every().day.at("05:00").do(job)
 
 while True:
     schedule.run_pending()
