@@ -16,23 +16,13 @@ import time
 #Подключаемся к боту       
 bot_token = bot
 bot = telebot.TeleBot(bot_token)
-'''
-keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=1)
-keyboard.row('Очистить сообщения')
 
-
-@bot.message_handler(commands=['start'])
-def start_message(message):
-    bot.send_message(message.chat.id, 'Добро пожаловать в систему оповещения', reply_markup=keyboard)  
-
+#Обработка сообщений
 @bot.message_handler(content_types=['text'])
 def send_text(message):
-    if message.text.lower() == 'очистить сообщения':
-        for numid in range(message.message_id-10,message.message_id-1):
-            bot.delete_message(message.chat.id, numid)
-        
-   
-'''     
+
+    if message.text.lower() == 'привет':
+        bot.send_message(message.chat.id, "Ваш ID: "+message.chat.id)
 
 #Функция оповещения
 def job():
@@ -66,11 +56,13 @@ def job():
          bot.send_message(a_id1,'Проблема с доступом к сервису оповещений natalday_bot')
          bot.send_message(a_id2,'Проблема с доступом к сервису оповещений natalday_bot')
 
+
 # Подключаем планировщик повторений    
 schedule.every().day.at("22:52").do(job)
 
 while True:
     schedule.run_pending()
     time.sleep(1)
+
 
 bot.polling()
